@@ -1,0 +1,8 @@
+services:
+  - name: web
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask run --host=0.0.0.0
+    envVars:
+      FLASK_APP: "app.py"  # Reemplaza "flask.py" con el nombre de tu archivo principal de Flask
+      FLASK_ENV: "development"
