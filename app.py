@@ -20,7 +20,10 @@ def index():
                 if file.filename.endswith('.xlsx'):
                     df = pd.read_excel(file)
                 elif file.filename.endswith('.csv'):
-                    df = pd.read_csv(file)
+                    try:
+                        df = pd.read_csv(file)
+                    except Exception as e:
+                        return f'Ocurrió un error al procesar el archivo CSV: {e}'
                 elif file.filename.endswith('.txt'):
                     df = pd.read_csv(file, sep='\t')
                 elif file.filename.endswith('.pdf'):
@@ -42,11 +45,17 @@ def download():
     table_data = request.args.get('table_data', '')
     
     # Crear un DataFrame de Pandas a partir de los datos de la tabla
-    df = pd.read_html(table_data)[0]
+    try:
+        df = pd.read_html(table_data)[0]
+    except Exception as e:
+        return f'Ocurrió un error al leer los datos de la tabla: {e}'
     
     # Guardar el DataFrame como archivo Excel
     excel_file = 'table_data.xlsx'
-    df.to_excel(excel_file, index=False)
+    try:
+        df.to_excel(excel_file, index=False)
+    except Exception as e:
+        return f'Ocurrió un error al guardar el archivo Excel: {e}'
     
     # Devolver el archivo Excel como una respuesta de descarga
     return send_file(excel_file, as_attachment=True)
